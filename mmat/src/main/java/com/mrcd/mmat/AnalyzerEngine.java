@@ -23,12 +23,12 @@ import java.util.HashMap;
  * hprof 分析引起
  * create by mrsimple at 2019-08-03.
  */
-class AnalyzerEngine {
+public class AnalyzerEngine {
 
     protected MemoryLeakAnalyzer mMemoryLeakAnalyzer;
 
 
-    boolean start(File hprofFile, File jsonConfigFile, boolean disableMonkey) throws IOException, InterruptedException, IllegalArgumentException {
+    public boolean start(File hprofFile, File jsonConfigFile, boolean disableMonkey) throws IOException, InterruptedException, IllegalArgumentException {
         return start(new AnalyzerArgs(hprofFile, jsonConfigFile, disableMonkey));
     }
 
@@ -40,7 +40,7 @@ class AnalyzerEngine {
      * @throws IOException
      * @throws InterruptedException
      */
-    boolean start(AnalyzerArgs args) throws IOException, InterruptedException, IllegalArgumentException {
+    public boolean start(AnalyzerArgs args) throws IOException, InterruptedException, IllegalArgumentException {
         if ( args == null ) {
             throw new IllegalArgumentException("AnalyzerArgs is null!") ;
         }
@@ -70,8 +70,12 @@ class AnalyzerEngine {
             mmatConfig.buildExcludeRefs(jsonConfig.optJSONArray("excluded_refs"));
             // 5. 分析 hprof
             analysisHprof(mmatConfig, snapshot, listener);
-            // 6. 打开分析报告文件夹
-            Desktop.getDesktop().open(FileUtils.getReportDir());
+
+            System.out.println("hprof analysis report dir : " + FileUtils.getReportDir().getAbsolutePath());
+            if ( Desktop.isDesktopSupported() ) {
+                // 6. 打开分析报告文件夹
+                Desktop.getDesktop().open(FileUtils.getReportDir());
+            }
         }
         return true ;
     }

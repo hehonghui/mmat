@@ -1,11 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.mrcd.mmat.plugin'
 
 // 应用配置
-
 def config = rootProject.ext.appConfig
-
 // 库的配置
-
 def libs = rootProject.ext.libraries
 
 android {
@@ -33,14 +31,6 @@ android {
     }
 }
 
-// 如果需要aar
-
-//repositories {
-//    flatDir {
-//        dirs 'libs'
-//    }
-//}
-
 dependencies {
     // implementation fileTree(dir: 'libs', include: ['*.jar'])
     
@@ -54,3 +44,7 @@ dependencies {
 
     testImplementation"${rootProject.ext.testing.junit}"
 }
+
+//mmat {
+//    jsonConfigFile '../mmat-config.json'
+//}

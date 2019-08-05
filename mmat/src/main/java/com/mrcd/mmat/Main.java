@@ -31,17 +31,16 @@ import java.io.FileNotFoundException;
 
 /**
  * Examines an Android heap dump.
- * 
+ * <p>
  * This MAT core code is adapted from <a href="https://bitbucket.org/ekabanov/mat/">
  * bitbucket.org/ekabanov/mat/</a>, which is a stripped-down command line
  * version of <a href="http://www.eclipse.org/mat/">Eclipse Memory Analyzer</a>.
- *
  */
 public class Main {
     /**
      * disable monkey
      */
-    static final String DISABLE_MONKEY = "-disable-monkey";
+    public static final String DISABLE_MONKEY = "-disable-monkey";
 
     private static void usage(String message) {
         if (message != null) {
@@ -73,60 +72,61 @@ public class Main {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        AnalyzerArgs cmdArgs = parseArgs(args) ;
+        AnalyzerArgs cmdArgs = parseArgs(args);
         // 开始进行hprof分析
         new AnalyzerEngine().start(cmdArgs);
     }
 
     /**
      * parse command line arguments
+     *
      * @param args
      * @return
      * @throws FileNotFoundException
      */
     static AnalyzerArgs parseArgs(String[] args) throws FileNotFoundException {
-        if ( args == null ) {
+        if (args == null) {
             return null;
         }
-        final AnalyzerArgs analyzerArgs = new AnalyzerArgs() ;
+        final AnalyzerArgs analyzerArgs = new AnalyzerArgs();
         // parse args
         for (int i = 0; i < args.length; i++) {
-            final String curArg = args[i] ;
+            final String curArg = args[i];
             // print help information
             if ("-h".equals(curArg) || "-help".equals(curArg)) {
                 usage(null);
-                return null ;
+                return null;
             }
 
             // 用户指定 hprof 文件的路径时不会再执行 monkey 测试, 直接进行分析
-            if ("-hprof".equalsIgnoreCase(curArg) && args.length > ( i + 1 ) ) {
-                File hprofFile = new File(args[i + 1]) ;
-                if ( !hprofFile.exists() ) {
-                    throw new FileNotFoundException(String.format("%s file not found!", hprofFile.getAbsolutePath())) ;
+            if ("-hprof".equalsIgnoreCase(curArg) && args.length > (i + 1)) {
+                File hprofFile = new File(args[i + 1]);
+                if (!hprofFile.exists()) {
+                    throw new FileNotFoundException(String.format("%s file not found!", hprofFile.getAbsolutePath()));
                 }
-                analyzerArgs.hprofFile = hprofFile ;
+                analyzerArgs.hprofFile = hprofFile;
             }
 
             // json config arg
-            if ( curArg.endsWith(".json") ) {
-                analyzerArgs.jsonConfigFile = new File(curArg) ;
+            if (curArg.endsWith(".json")) {
+                analyzerArgs.jsonConfigFile = new File(curArg);
             }
 
             // disable monkey
-            if ( DISABLE_MONKEY.equalsIgnoreCase(curArg) ) {
-                analyzerArgs.disableMonkey = true ;
+            if (DISABLE_MONKEY.equalsIgnoreCase(curArg)) {
+                analyzerArgs.disableMonkey = true;
             }
         }
 
         // 确认 mmat json config 参数, 如果未设置则使用当前路径下的mmat-config.json
-        if ( analyzerArgs.jsonConfigFile == null ) {
+        if (analyzerArgs.jsonConfigFile == null) {
             // 如果没有参数, 则从当前目录下找 mmat-config.json 文件
-            analyzerArgs.jsonConfigFile = new File(FileUtils.getRuntimeWorkDir() + File.separator + "mmat-config.json") ;
+            analyzerArgs.jsonConfigFile = new File(FileUtils.getRuntimeWorkDir() + File.separator + "mmat-config.json");
         }
 
-        if ( !analyzerArgs.jsonConfigFile.exists() ) {
-            throw new FileNotFoundException("mmat-config.json not found!") ;
+        if (!analyzerArgs.jsonConfigFile.exists()) {
+            throw new FileNotFoundException("mmat-config.json not found!");
         }
-        return analyzerArgs ;
+        return analyzerArgs;
     }
 }

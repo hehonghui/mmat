@@ -1,1 +1,1 @@
-include ':app', ':mmat'
+include ':app', ':mmat', ':mmat-plugin'

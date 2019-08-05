@@ -1,0 +1,23 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+// apply publish plugin
+//apply from: rootProject.file('gradle/publish_to_maven.gradle')
+
+targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation ("com.mrcd:mmat:0.9.1")
+}
+
+// fixme : publish to local
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: 'file:///Users/mrsimple/Desktop/plugin')
+        pom.groupId = 'com.mrcd'
+        pom.artifactId = 'mmat-plugin'
+        pom.version = '0.2'
+    }
+}

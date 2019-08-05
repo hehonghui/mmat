@@ -1,4 +1,5 @@
 apply plugin: 'java-library'
+apply plugin: 'maven'
 
 sourceSets {
 
@@ -45,3 +46,31 @@ dependencies {
 
 sourceCompatibility = "8"
 targetCompatibility = "8"
+
+
+
+final Properties rootProperties = new Properties()
+rootProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+// 存在工程根目录的 local.properties 中用户信息
+final String nexusUrl = rootProperties.getProperty("nexus.url")
+final String snapshotNexusUrl = rootProperties.getProperty("nexus.snapshotUrl")
+final String userName = rootProperties.getProperty("nexus.username")
+final String password = rootProperties.getProperty("nexus.pwd")
+def groupId = rootProperties.getProperty("group")
+
+//上传到nexus
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: nexusUrl) {
+                authentication(userName: userName, password: password)
+            }
+            pom.groupId = "com.mrcd"
+            pom.artifactId = "mmat"
+            pom.version = "0.9.1"
+        }
+    }
+}
+
+
