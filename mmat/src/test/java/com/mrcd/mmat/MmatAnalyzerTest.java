@@ -120,6 +120,22 @@ public class MmatAnalyzerTest {
         assertEquals(0, engine.getMemoryLeakAnalyzer().getLeakTraces().size());
     }
 
+    @Test
+    public void testNullAnalyzerArgs() {
+        boolean illegalArg = false ;
+        AnalyzerEngine engine = new AnalyzerEngine();
+        try {
+            engine.start(null) ;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            illegalArg = true ;
+        }
+        assertTrue(illegalArg);
+    }
 
     @Test
     public void testParsePID() {

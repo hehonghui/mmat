@@ -28,7 +28,7 @@ class AnalyzerEngine {
     protected MemoryLeakAnalyzer mMemoryLeakAnalyzer;
 
 
-    boolean start(File hprofFile, File jsonConfigFile, boolean disableMonkey) throws IOException, InterruptedException {
+    boolean start(File hprofFile, File jsonConfigFile, boolean disableMonkey) throws IOException, InterruptedException, IllegalArgumentException {
         return start(new AnalyzerArgs(hprofFile, jsonConfigFile, disableMonkey));
     }
 
@@ -40,9 +40,9 @@ class AnalyzerEngine {
      * @throws IOException
      * @throws InterruptedException
      */
-    boolean start(AnalyzerArgs args) throws IOException, InterruptedException {
+    boolean start(AnalyzerArgs args) throws IOException, InterruptedException, IllegalArgumentException {
         if ( args == null ) {
-            return false;
+            throw new IllegalArgumentException("AnalyzerArgs is null!") ;
         }
         // 清空 hprof_analysis 文件夹
         FileUtils.clearHeapDumpDir();
