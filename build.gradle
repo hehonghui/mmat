@@ -1,53 +1,28 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-
 buildscript {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
     repositories {
-        maven {
-            url properties.getProperty("nexus.mavenCentral")
-            credentials {
-                username properties.getProperty("nexus.username")
-                password properties.getProperty("nexus.pwd")
-            }
-        }
         google()
         jcenter()
-
-        // 依赖插件
-        maven {
-            url 'file:///Users/mrsimple/Desktop/plugin'
-        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.1'
-        classpath 'com.mrcd:mmat-plugin:0.2'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        // jcenter plugin
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+
+        // mmat plugin
+        classpath 'org.mrcd:mmat-plugin:0.2.7'
     }
 }
 
 allprojects {
 
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
     repositories {
-        // 依赖插件
-        maven {
-            url 'file:///Users/mrsimple/Desktop/plugin'
-        }
-
-        maven {
-            url properties.getProperty("nexus.mavenCentral")
-            credentials {
-                username properties.getProperty("nexus.username")
-                password properties.getProperty("nexus.pwd")
-            }
-        }
         google()
         jcenter()
+        mavenCentral()
     }
 }
 

@@ -1,7 +1,12 @@
 apply plugin: 'groovy'
-apply plugin: 'maven'
-// apply publish plugin
+//apply plugin: 'maven'
+//// apply publish plugin
 //apply from: rootProject.file('gradle/publish_to_maven.gradle')
+
+//apply plugin: 'maven'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
 
 targetCompatibility = JavaVersion.VERSION_1_8
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -9,15 +14,93 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-    implementation ("com.mrcd:mmat:0.9.1")
+
+    compile 'org.mrcd:mmat:0.2.1'
 }
 
-// fixme : publish to local
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: 'file:///Users/mrsimple/Desktop/plugin')
-        pom.groupId = 'com.mrcd'
-        pom.artifactId = 'mmat-plugin'
-        pom.version = '0.2'
+sourceSets {
+    main {
+        java {
+            java.srcDirs = ['../mmat/src/main/java']
+        }
     }
 }
+
+//打包源代码
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+final Properties rootProperties = new Properties()
+rootProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+
+def siteUrl = 'https://github.com/hehonghui/mmat'      // 项目的主页
+def gitUrl = 'https://github.com/hehonghui/mmat.git'   // Git仓库的url
+// Maven Group ID for the artifact，一般填你唯一的包名
+group = "org.mrcd"
+def libName = 'mmat-plugin'
+// This is the library version used when deploying the artifact
+version = "0.2.7"
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                // Add your description here
+                name 'An automatically analysis hprof library for android app'
+                url siteUrl
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'bboyfeiyu'
+                        name 'Mr.Simple'
+                        email 'bboyfeiyu@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = rootProperties.getProperty("bintray.user")
+    key = rootProperties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = libName
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
+
+
+// fixme : publish to local
+//uploadArchives {
+//    repositories.mavenDeployer {
+//        repository(url: 'file:///Users/mrsimple/Desktop/plugin')
+//        pom.groupId = 'com.mrcd'
+//        pom.artifactId = 'mmat-plugin'
+//        pom.version = '0.2.1'
+//    }
+//}

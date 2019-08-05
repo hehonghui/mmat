@@ -41,7 +41,7 @@ class HprofDumper {
             // 发送两次后退事件, 使得应用退到后台
             ProcessUtil.executeCommand("adb shell input keyevent " + BACK_PRESS_KEY) ;
             ProcessUtil.executeCommand("adb shell input keyevent " + BACK_PRESS_KEY) ;
-            if ( config.enableForceGc ) {
+            if ( config.enableForceGc && ProcessUtil.getPid() != ProcessUtil.INVALID_PID ) {
                 // force gc (需要root设备)
                 ProcessUtil.executeCommand(String.format("adb shell su -c \"kill -10 %d\"", ProcessUtil.getPid())) ;
             } else {

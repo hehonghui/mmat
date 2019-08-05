@@ -141,5 +141,11 @@ public class MmatAnalyzerTest {
     public void testParsePID() {
         String pidLine = "** MEMINFO in pid 31736 [com.example.demo] **";
         assertEquals(31736, ProcessUtil.parsePid(pidLine));
+
+        pidLine = "** MEMINFO in pid 4970 [sun.way2sms.hyd.com] **";
+        assertEquals(4970, ProcessUtil.parsePid(pidLine));
+
+        pidLine = "** MEMINFO in pid 4970 [sun.way2sms.hyd.com] **";
+        assertEquals(4970, ProcessUtil.findPid(pidLine.split(" ")));
     }
 }

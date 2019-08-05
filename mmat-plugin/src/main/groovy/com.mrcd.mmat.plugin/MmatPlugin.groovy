@@ -37,6 +37,7 @@ public class MmatPlugin implements Plugin<Project> {
     }
 
     void startMmatRunner() {
+        System.out.println("current dir : " + new File("./").getAbsolutePath())
         File jsonConfigFile
         if ( TextUtils.isEmpty(mmatExt.jsonConfigFile) ) {
             // default mmat config
@@ -44,8 +45,10 @@ public class MmatPlugin implements Plugin<Project> {
         } else {
             jsonConfigFile = new File(mmatExt.jsonConfigFile)
         }
+
+        System.out.println("json config path : " + mmatExt.jsonConfigFile)
         if ( !jsonConfigFile.exists() ) {
-            throw new FileAlreadyExistsException("json config file not found!!")
+            throw new FileNotFoundException("json config file not found!!")
         }
 
         File hprofFile = null

@@ -45,6 +45,9 @@ dependencies {
     testImplementation"${rootProject.ext.testing.junit}"
 }
 
-//mmat {
-//    jsonConfigFile '../mmat-config.json'
-//}
+// mmat plugin config
+mmat {
+    jsonConfigFile 'app/mmat-config.json'
+    disableMonkey false
+    hprofFile null
+}
