@@ -1,0 +1,58 @@
+<style type="text/css">
+	body {
+		background-color: #262626
+	}
+
+	h1 {
+		color: #c0c0c0;
+		font-size: 50px;
+		margin: 10px;
+	}
+
+	h2 {
+	    color: #B42A2A;
+		font-size: 28px;
+		margin: 0px;
+		padding: 30px 0px 0px 0px;
+	}
+
+	h6 {
+		color: #c0c0c0;
+    	font-size: 18px;
+    	margin: 0px;
+    	padding: 0px;
+    }
+
+	.success {
+		color: green;
+		font-size: 28px;
+	}
+
+	.leak_element {
+        font-size: 18px;
+	}
+
+	.dominate_element {
+    	color: #CB522E;
+        font-size: 20px;
+    }
+
+    .normal_leak_field {
+        color: #CB522E;
+        font-size: 20px;
+    }
+
+	pre {
+		color: #c0c0c0;
+		font-size: 18px;
+		font-family: "Times New Roman", Times, serif;
+	}
+	h3 {
+	    color: #c0c0c0;
+    	font-size: 18px;
+    }
+
+    img {
+        margin: 15px;
+    }
+</style>

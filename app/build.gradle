@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+
+// 应用配置
+
+def config = rootProject.ext.appConfig
+
+// 库的配置
+
+def libs = rootProject.ext.libraries
+
+android {
+    compileSdkVersion config.compileVersion
+    buildToolsVersion config.buildToolsVersion
+    defaultConfig {
+        applicationId "com.example.mmat"
+        minSdkVersion config.minSdk
+        targetSdkVersion config.targetSdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+}
+
+// 如果需要aar
+
+//repositories {
+//    flatDir {
+//        dirs 'libs'
+//    }
+//}
+
+dependencies {
+    // implementation fileTree(dir: 'libs', include: ['*.jar'])
+    
+    // implementation (name: "your-aar-name", ext: "aar")
+    implementation"com.android.support:appcompat-v7:${libs.appcompatVersion}"
+
+    // 图片加载
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+
+    testImplementation"${rootProject.ext.testing.junit}"
+}

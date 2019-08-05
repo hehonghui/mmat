@@ -1,0 +1,24 @@
+{
+	"package": "com.example.mmat",
+	"main_activity": "com.example.mmat.MainActivity",
+	"monkey_command": "adb shell monkey -p com.example.mmat --ignore-crashes --ignore-timeouts --ignore-native-crashes --ignore-security-exceptions --pct-touch 40 --pct-motion 25 --pct-appswitch 10 --pct-rotation 5 -s 12358 -v -v -v --throttle 300 150",
+	"enable_force_gc": true,
+	"hprof_dir": "/sdcard/",
+	"detect_leak_classes": [
+		"android.app.Activity", 
+		"android.app.Fragment", 
+		"android.support.v4.app.Fragment"
+	],
+	"excluded_refs": [
+		{
+			"class": "android.arch.lifecycle.ReportFragment",
+			"fields": [],
+			"type": "static"
+		}
+	],
+	"bitmap_report": {
+		"max_report_count": 20,
+		"min_width": 256,
+		"min_height": 256
+	}
+}

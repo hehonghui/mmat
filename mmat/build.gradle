@@ -1,0 +1,47 @@
+apply plugin: 'java-library'
+
+sourceSets {
+
+    test {
+        java {
+            srcDirs = ["src/test/java"]
+        }
+    }
+}
+
+
+def jarVersion = '1.0'
+
+task buildMMAT(type: Jar, group: 'build', dependsOn:'build') {
+    delete("../mmat-${jarVersion}.jar")
+    delete("build/libs/*.jar")
+
+    archiveName = "mmat-${jarVersion}.jar"
+    // 添加代码依赖
+    from('build/classes/java/main/')
+    // 添加资源
+    from('src/main/resources/')
+    // 添加 manifest
+    manifest {
+        attributes 'Main-Class': 'com.mrcd.mmat.Main'
+    }
+    // 输出
+    destinationDir = file('build/libs')
+
+    doLast {
+        copy {
+            System.out.println("copy build/libs/${archiveName}")
+            from "build/libs/${archiveName}"
+            into "../"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    testImplementation 'junit:junit:4.12'
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"
