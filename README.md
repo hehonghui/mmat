@@ -35,7 +35,7 @@ MMAT就是为了解决这个问题, 它的核心思路是用户在操作完app (
 * 在项目 root project build.gradle 中添加`mmat-plugin`引用;    
 示例如下: 
 
-```
+```gradle
 buildscript {
 
     repositories {
@@ -53,7 +53,7 @@ buildscript {
 
 * 在app module 的 build.gralde 中添加mmat-plugin与配置
 
-```
+```gradle
 apply plugin: 'com.mrcd.mmat.plugin'
 
 
@@ -92,7 +92,7 @@ mmat {
 
 我们再到MemoryLeakActivity中查看 sActivityLeaked 相关的代码, 如下所示:   
 
-```
+```java
 /**
  * 产生内存泄漏的页面
  */
@@ -107,7 +107,7 @@ public class MemoryLeakActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leak);
         
-		 // memory leaked
+	// memory leaked
         sActivityLeaked.add(this) ;
     }
 }
@@ -139,7 +139,7 @@ public class MemoryLeakActivity extends AppCompatActivity {
 
 **mmat-config.json 示例如下:** 
 
-```
+```json
 {
 	"package": "com.example.mmat",
 	"main_activity": "com.example.mmat.MainActivity",
@@ -194,7 +194,7 @@ public class MemoryLeakActivity extends AppCompatActivity {
 
 示例如下:     
 
-```
+```xml
     <application
         android:debuggable="true"
             
