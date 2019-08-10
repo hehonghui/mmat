@@ -1,33 +1,35 @@
-# ![](./doc/mmat_icon.png) MMAT 自动化内存分析工具
+# ![](./doc/mmat_icon.png) MMAT - Android自动化内存分析工具
 
 [ ![Download](https://api.bintray.com/packages/bboyfeiyu/maven/mmat/images/download.svg?version=1.0) ](https://bintray.com/bboyfeiyu/maven/mmat/1.0/link)
 [![CircleCI](https://circleci.com/gh/hehonghui/mmat.svg?style=svg)](https://circleci.com/gh/hehonghui/mmat)
 
+[English README](./READM-en.md)
+------
 在开发Android App过程中我们通常使用`LeakCanary`进行内存泄漏检测, 它基本原理是在App运行时检测Activity、Fragment是否产生内存泄漏, 如果有内存泄漏则进行dump hprof, 然后分析该泄漏的GC ROOT, 最终通过通知栏通知用户内存泄漏的情况. 这种方式能够在开发app时简单、有效地找出内存泄漏.
 
 但是由于`LeakCanary`是app运行时发现泄漏之后立即dump 内存快照，并且实时进行分析数据, 而由于移动设备的计算能力有限, 导致使用`LeakCanary`并不能在运行时分析出所有内存泄漏，例如当`LeakCanary`正在分析一次内存泄漏时又产生了另外的内存泄漏, 而在LeakCanary分析完所有内存泄漏时用户可以退出app. 
 
 因此需要另外一种`补充机制`, 能够在App运行结束之后进行全面、自动地离线分析app内存泄漏情况, 一次性分析出本次App运行产生的所有Activity、Fragment的内存泄漏, 那么将会让内存泄漏分析更加全面、高效.
 
-MMAT就是为了解决这个问题, 它的核心思路是用户在操作完app (可以是用户自己操作，也可以通过运行monkey进行随机操作)之后，通过`adb shell`命令将app退回到主页面, 然后再退回桌面 (此时应用的Application 还存在, 但是所有页面都应该被销毁, app处于后台状态). 此时如果没有产生内存泄漏, 那么被测试的App中就不会存在Activity、Fragment的实例;然后再dump 内存快照到pc上通过MMAT进行离线分析, 最终得到内存泄漏的完整报告. 
+MMAT就是为了解决这个问题, 它的核心思路是用户在操作完app (可以是工程师自己操作，也可以通过运行monkey进行随机操作)之后，通过`adb shell`命令将app退回到主页面, 然后再退回桌面 (此时应用的Application 还存在, 但是所有页面都应该被销毁, app处于后台状态). 此时如果没有产生内存泄漏, 那么被测试的App中就不会存在Activity、Fragment的实例;然后再dump 内存快照到pc上通过MMAT进行离线分析, 最终得到内存泄漏的完整报告. 
 
 
 ## 一、MMAT 工作流程 
 
-1. 如果有配置monkey测试命令, 则执行monkey测试 (monkey测试会使得App会随机进入各种Activity, 这种压力测试也容易产生内存泄漏; 当然自己手动操作App, 然后退到后台, 再运行mmat(禁用monkey测试)进行检测也可以)
-	* 1.1 执行monkey测试 (可禁用)
+1. 如果有配置monkey测试命令, 则执行monkey测试 (monkey测试会使得App会随机进入各种Activity, 这种压力测试也容易产生内存泄漏; )
+	* 1.1 执行monkey测试 
 	* 1.2 回到app 主页面 
 	* 1.3 将app退到后台, 回到手机桌面	
 	* 1.4 执行app的force gc (需要手机是root)
-2. dump hprof内存快照
-3. 分析hprof, 得到所有Activity、Fragment泄漏的记录以及超过一定大小的Bitmap文件
-4. 将分析结果输出为html报告
+2. 如果你不想使用monkey, 也可以自己手动操作App, 完成所有操作之后将App退到后台
+3. 运行MMAT, dump hprof内存快照
+4. 分析hprof, 得到所有Activity、Fragment泄漏的记录以及超过一定大小的Bitmap文件
+5. 将分析结果输出为html报告
 
 
 ## 二、使用MMAT
 
-> 注意: 因为MMAT在通过monkey操作app后会使用 adb 命令dump应用的内存信息, 因此如果你需要dump release版的app的内存信息, 请确保你的app在测试时可调试的 (**风险提示: 建议只在测试时开启debuggable=true, 对外发布的apk不要设置为true**), 
-即需要在 AndroidManifest.xml 的 application 节点中添加 `android:debuggable="true"`.
+> 注意: 因为MMAT在通过monkey操作app后会使用 adb 命令dump应用的内存信息, 因此如果你需要dump release版的app的内存信息, 请确保你的app在测试时可调试的, 即需要在 AndroidManifest.xml 的 application 节点中添加 `android:debuggable="true"`, 请参考[AndroidManifest.xml配置](#manifest) (**风险提示: 建议只在测试时开启debuggable=true, 对外发布的apk不要设置为true**).
 
 使用MMAT有两种方式, 请参考 [1.1章节](#mmat-plugin) 和 [1.2章节](#mmat-jar)
 
@@ -67,7 +69,7 @@ mmat {
     // 是否禁用monkey测试
     disableMonkey false
     
-    // 直接分析现有的hprof文件,如果设定了该参数, monkey脚本会被忽略
+    // 如果设定了该参数, MMAT会直接分析该内存快照,monkey脚本会被忽略
     // hprofFile "your-hprof-file-path"
 }
 ```
@@ -110,7 +112,7 @@ public class MemoryLeakActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leak);
         
-	// memory leaked
+		 // memory leaked
         sActivityLeaked.add(this) ;
     }
 }
@@ -129,7 +131,7 @@ public class MemoryLeakActivity extends AppCompatActivity {
 * `monkey_command`: monkey 命令(字符串命令)或者shell脚本路径(完整的文件路径)
 * `enable_force_gc`: dump hprof 文件之前是否对目标App force gc (默认为true)
 * `hprof_dir`:  dump出来的hprof存放在Android设备中的根目录(默认为`/sdcard/`), Android 系统默认不允许访问`/sdcard/`时可以配置这个参数修改hprof存储路径, 否则无法`adb pull hprof`文件.
-* `detect_leak_classes`: 要检测是否泄漏的类列表, 主要是Activity、Fragment的子类, 默认情况下已经添加了Activity和Fragment;
+* `detect_leak_classes`: 要检测内存泄漏的类列表, 主要是Activity、Fragment的子类. 如果你没有其他的类型需要检测，则不需要修改这个配置;
 * `excluded_refs` :  要排除的产生泄漏的对象 (例如Android系统自己的内存泄漏),只有弱引用和软引用的对象通常也要排除
 	* class : 要排除的类名
 	* fields : 字段列表, 即排除某个类的某个字段产生的内存泄漏
@@ -185,6 +187,7 @@ public class MemoryLeakActivity extends AppCompatActivity {
 }
 ```
 
+<span id="manifest"/>
 ## 三、AndroidManifest.xml application 配置样例
 
 **注意, 只在【测试时】添加这些配置即可 (可以通过 flavor 对不同版本进行不同的配置).**
@@ -192,8 +195,7 @@ public class MemoryLeakActivity extends AppCompatActivity {
 * application中配置 `android:debuggable="true"`, 这样确保在debug、release模式下可以通过 adb shell dump 内存数据 (hprof)
 * MainActivity (App主页面) 中配置 `android:exported="true"` 和 `android:launchMode="singleTask"`
     * `android:exported="true"`: 保证可以通过 adb shell 启动主页面
-    * `android:launchMode="singleTask"` : 保证通过adb shell 启动主页面时, Activity栈中没有其他页面, 只有主页面在栈顶, 即除了主页面之外的其他Activity
-     都应该已经销毁, 如果没有销毁那么就是存在内存泄漏.
+    * `android:launchMode="singleTask"` : 保证通过adb shell 启动主页面时, Activity栈中的其他页面会被清除. 此时只有主页面在栈顶, 即除了主页面之外的其他Activity都应该已经销毁. **这样通过Monkey测试完之后, 再通过 adb shell 启动主页面后就只有主页面存在, 然后再通过adb shell将app退到后台, 此时主页面也会被销毁, 然后再dump 内存快照, 再分析内存, 此时如果还存在Activity、Fragment则表示产生了内存泄漏.**
 
 示例如下:     
 
