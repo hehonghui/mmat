@@ -39,9 +39,3 @@ MAT中导出的Bitmap mBuffer数据, 具体操作为:
 然后我们根据顶部的提示, 在窗口底部将颜色模式修改为 `ARGB_8888` (也就是Android 中Bitmap的ARGB_8888), 然后重新加载即可. 如图所示: 
 
  <img src="./doc/reload.jpg" width="320" /> 
-
-
-## 发布Bitmap preview
-
-执行 `./gradlew bitmappreview:jar` 即可在 build/libs/ 中得到 bitmap-preview.jar 文件.     
-也可以从这里下载 [bitmap-preview-1.0.jar](./bitmap-preview-1.0.jar)
