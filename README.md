@@ -1,6 +1,7 @@
 # ![](./doc/mmat_icon.png) MMAT 自动化内存分析工具
 
 [ ![Download](https://api.bintray.com/packages/bboyfeiyu/maven/mmat/images/download.svg?version=1.0) ](https://bintray.com/bboyfeiyu/maven/mmat/1.0/link)
+[![CircleCI](https://circleci.com/gh/hehonghui/mmat.svg?style=svg)](https://circleci.com/gh/hehonghui/mmat)
 
 在开发Android App过程中我们通常使用`LeakCanary`进行内存泄漏检测, 它基本原理是在App运行时检测Activity、Fragment是否产生内存泄漏, 如果有内存泄漏则进行dump hprof, 然后分析该泄漏的GC ROOT, 最终通过通知栏通知用户内存泄漏的情况. 这种方式能够在开发app时简单、有效地找出内存泄漏.
 
