@@ -3,7 +3,6 @@ mmat/hprof_analysis/
 mmat/src/test/assets/*.index
 hprof_analysis/*.index
 hprof_analysis/*.hprof
-report/
 *.iml
 .idea/
 .gradle
