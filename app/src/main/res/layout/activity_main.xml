@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:textSize="30sp"
         android:gravity="center"
-        android:text="App主页面"
+        android:text="App Main Activity"
         />
 
 </FrameLayout>
