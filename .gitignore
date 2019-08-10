@@ -1,7 +1,7 @@
 app/hprof_analysis/
 mmat/hprof_analysis/
 mmat/src/test/assets/*.index
-hprof_analysis/
+hprof_analysis/*.index
 report/
 *.iml
 .idea/

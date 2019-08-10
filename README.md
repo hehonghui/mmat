@@ -6,13 +6,13 @@
 
 因此需要另外一种`补充机制`, 能够在App运行结束之后进行全面、自动地离线分析app内存泄漏情况, 一次性分析出本次App运行产生的所有Activity、Fragment的内存泄漏, 那么将会让内存泄漏分析更加全面、高效.
 
-MMAT就是为了解决这个问题, 它的核心思路就是用户在操作完app (可以是用户自己操作，也可以通过运行monkey进行随机操作)之后，通过`adb shell`命令将app退回到主页面, 然后再退回桌面 (此时应用的Application 还存在, 但是所有页面都应该被销毁, app处于后台状态). 此时如果没有产生内存泄漏, 那么被测试的App中就不会存在Activity、Fragment的实例;然后再dump 内存快照到pc上通过MMAT进行离线分析, 最终得到内存泄漏的完整报告. 
+MMAT就是为了解决这个问题, 它的核心思路是用户在操作完app (可以是用户自己操作，也可以通过运行monkey进行随机操作)之后，通过`adb shell`命令将app退回到主页面, 然后再退回桌面 (此时应用的Application 还存在, 但是所有页面都应该被销毁, app处于后台状态). 此时如果没有产生内存泄漏, 那么被测试的App中就不会存在Activity、Fragment的实例;然后再dump 内存快照到pc上通过MMAT进行离线分析, 最终得到内存泄漏的完整报告. 
 
 
 ## 一、MMAT 工作流程 
 
-1. 如果有配置monkey测试命令, 则执行monkey测试 (monkey测试会使得App会随机进入各种Activity, 并且也容易产生内存泄漏; 当然自己手动操作App, 然后退到后台, 再运行mmat进行检测也可以)
-	* 1.1 执行monkey测试
+1. 如果有配置monkey测试命令, 则执行monkey测试 (monkey测试会使得App会随机进入各种Activity, 这种压力测试也容易产生内存泄漏; 当然自己手动操作App, 然后退到后台, 再运行mmat(禁用monkey测试)进行检测也可以)
+	* 1.1 执行monkey测试 (可禁用)
 	* 1.2 回到app 主页面 
 	* 1.3 将app退到后台, 回到手机桌面	
 	* 1.4 执行app的force gc (需要手机是root)
@@ -23,11 +23,13 @@ MMAT就是为了解决这个问题, 它的核心思路就是用户在操作完ap
 
 ## 二、使用MMAT
 
-> 注意: 因为MMAT在通过monkey操作app后会使用 adb 命令dump应用的内存信息, 因此如果你需要dump release版的app的内存信息, 请确保你的app在测试时可调试的 (风险提示: 建议只在测试时开启debuggable=true, 对外发布的apk不要设置为true), 
+> 注意: 因为MMAT在通过monkey操作app后会使用 adb 命令dump应用的内存信息, 因此如果你需要dump release版的app的内存信息, 请确保你的app在测试时可调试的 (**风险提示: 建议只在测试时开启debuggable=true, 对外发布的apk不要设置为true**), 
 即需要在 AndroidManifest.xml 的 application 节点中添加 `android:debuggable="true"`.
 
-使用MMAT有量
+使用MMAT有两种方式, 请参考 [1.1章节](#mmat-plugin) 和 [1.2章节](#mmat-jar)
 
+
+<span id='mmat-plugin'></span>
 ### 1.1 通过 gradle plugin 使用MMAT
 
 * 在项目 root project build.gradle 中添加`mmat-plugin`引用;    
@@ -44,7 +46,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.4.1'
 
         // add mmat plugin library
-        classpath 'org.mrcd:mmat-plugin:0.2.7'
+        classpath 'org.mrcd:mmat-plugin:0.9.1'
     }
 }
 ```
@@ -67,17 +69,18 @@ mmat {
 }
 ```
 
-* 执行 `./gradlew mmatRunner` 进行app自动内存分析
+* 执行 `./gradlew startMmatRunner` 进行app自动内存分析, 最终报告会存在被测试app的`hprof_analysis/report/` 目录下, 报告示例参考[Hprof Analysis Report](#report).
 
 
+<span id='mmat-jar'></span>
 ### 1.2 通过jar文件使用MMAT
 
 
-在项目的`根目录`下添加`mmat-config.json`配置 (下一章节介绍如何配置), 然后执行 mmat的可执行jar文件. 例如我的测试项目路径是 `/User/mrsimple/test-project/`, 在该目录下添加 `mmat-config.json` 文件, 安装要测试的apk之后执行如下命令:
+将[mmat-1.0.jar](./dist/mmat-1.0.jar)下载到项目的根目录, 另外在项目的`根目录`下添加`mmat-config.json`配置 (如何配置请参考[mmat config配置](#mmat-config) ), 然后执行 mmat的可执行jar文件. 例如我的测试项目路径是 `/User/mrsimple/test-project/`, 添加 `mmat-config.json` 文件,并且进行相关的配置, 最后安装要测试的apk之后, 在项目跟目录下执行进入到如下命令:
 
 `java  -jar  mmat-1.0.jar /User/mrsimple/test-project/mmat-config.json`
 
-
+<span id='report'></span>
 执行完之后即可在 `/User/mrsimple/test-project/hprof-analysis/report` 下看到内存分析的报告. 如下图所示:    
 
 <img src="./doc/leak-report.png" width="720" />
@@ -115,14 +118,15 @@ public class MemoryLeakActivity extends AppCompatActivity {
 其他的内存泄漏也是通过类似的方法根据报告进行分析即可.
 
 
+<span id='mmat-config'></span>
 ## 三、mmat-config.json 配置说明
 
-* `package`: 要测试的应用包名
-* `main_activity`: 应用的主页面的类路径 (需要在AndroidManifest.xml 注册时添加`exported=true`)
+* `package`: 要测试的应用包名, 必填
+* `main_activity`: 应用的主页面的类路径,必填 (需要在AndroidManifest.xml 注册时添加`exported=true`)
 * `monkey_command`: monkey 命令(字符串命令)或者shell脚本路径(完整的文件路径)
 * `enable_force_gc`: dump hprof 文件之前是否对目标App force gc (默认为true)
-* `hprof_dir`:  dump出来的hprof存放在Android设备中的根目录(默认为/sdcard/), Android 系统默认不允许访问/sdcard/时可以配置这个参数修改hprof存储路径, 否则无法adb pull hprof文件.
-* `detect_leak_classes`: 要检测是否泄漏的类列表, 主要是Activity、Fragment的子类
+* `hprof_dir`:  dump出来的hprof存放在Android设备中的根目录(默认为`/sdcard/`), Android 系统默认不允许访问`/sdcard/`时可以配置这个参数修改hprof存储路径, 否则无法`adb pull hprof`文件.
+* `detect_leak_classes`: 要检测是否泄漏的类列表, 主要是Activity、Fragment的子类, 默认情况下已经添加了Activity和Fragment;
 * `excluded_refs` :  要排除的产生泄漏的对象 (例如Android系统自己的内存泄漏),只有弱引用和软引用的对象通常也要排除
 	* class : 要排除的类名
 	* fields : 字段列表, 即排除某个类的某个字段产生的内存泄漏

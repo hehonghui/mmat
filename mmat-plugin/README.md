@@ -1,7 +1,4 @@
-# Quake 
-
-
-`./gradlew -p quake/ clean build uploadArchives`
+# MMAT Plugin
 
 
 

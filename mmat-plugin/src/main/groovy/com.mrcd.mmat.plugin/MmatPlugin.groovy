@@ -4,8 +4,6 @@ import com.mrcd.mmat.AnalyzerEngine
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-import java.nio.file.FileAlreadyExistsException
-
 /**
  * 参考: https://juejin.im/post/5a523dd56fb9a01cbf382ce9
  * 参考:
@@ -26,7 +24,7 @@ public class MmatPlugin implements Plugin<Project> {
             mmatExt = project.mmat
 
             // create mmatRunner task
-            project.task("mmatRunner", group: 'verification') {
+            project.task("startMmatRunner", group: 'verification') {
                 doLast {
                     startMmatRunner()
                 }
