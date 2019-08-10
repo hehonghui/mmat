@@ -17,6 +17,8 @@ jobs:
     working_directory: ~/repo
 
     environment:
+      ANDROID_HOME: /usr/local/android-sdk-linux
+      ANDROID_HOME_ROOT: /usr/local/android-sdk-linux
       # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
       TERM: dumb
