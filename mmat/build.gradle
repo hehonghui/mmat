@@ -61,7 +61,12 @@ artifacts {
 }
 
 final Properties rootProperties = new Properties()
-rootProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+try {
+    rootProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+} catch (Exception e) {
+    e.fillInStackTrace()
+}
+
 
 // 存在工程根目录的 local.properties 中用户信息
 //final String nexusUrl = rootProperties.getProperty("nexus.url")

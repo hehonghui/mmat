@@ -37,7 +37,12 @@ artifacts {
 }
 
 final Properties rootProperties = new Properties()
-rootProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+try {
+    rootProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+} catch (Exception e) {
+    e.fillInStackTrace()
+}
+
 
 
 def siteUrl = 'https://github.com/hehonghui/mmat'      // 项目的主页
