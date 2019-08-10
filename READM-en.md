@@ -33,7 +33,8 @@ There are two ways of using MMAT, please refer to [section 1.1](#mmat-plugin) an
 
 
 <span id='mmat-plugin'></span>
-### 1.1 Use MMAT through gradle plugin
+
+### 2.1 Use MMAT through gradle plugin
   
 * add `classpath 'org.mrcd:mmat-plugin:0.9.1'` into project build.gradle. For example: 
 
@@ -75,7 +76,8 @@ mmat {
 
 
 <span id='mmat-jar'></span>
-### 1.2  Use MMAT through jar
+
+### 2.2  Use MMAT through jar
 
 Save [mmat-1.0.jar](./dist/mmat-1.0.jar) into the root dir of your project, and then add `mmat-config.json`, see [mmat configuration](#mmat-config) for reference. The next step is to run executable mmat jar in the root dir of your project. For example:
 
@@ -119,6 +121,7 @@ As you can see, we add MemoryLeakActivity instance to sActivityLeaked, but it's 
 For other memory leaks, you can also use similar way to analyze the report and fix them.
 
 <span id='mmat-config'></span>
+
 ## 三、mmat-config.json configuration
 
 * `package`: App package to be tested
@@ -182,7 +185,7 @@ For other memory leaks, you can also use similar way to analyze the report and f
 }
 ```
 
-## 三、AndroidManifest.xml application configuration demo
+## 四、AndroidManifest.xml application configuration demo
 
 * add `android:debuggable="true"` in the application tag to ensure you can dump memory snapshot through adb shell in both debug and release mode. 
 * add `android:exported="true"` and `android:launchMode="singleTask"` in MainActivity (App main page) 

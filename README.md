@@ -35,7 +35,7 @@ MMAT就是为了解决这个问题, 它的核心思路是用户在操作完app (
 
 
 <span id='mmat-plugin'></span>
-### 1.1 通过 gradle plugin 使用MMAT
+### 2.1 通过 gradle plugin 使用MMAT
 
 * 在项目 root project build.gradle 中添加`mmat-plugin`引用;    
 示例如下: 
@@ -78,7 +78,7 @@ mmat {
 
 
 <span id='mmat-jar'></span>
-### 1.2 通过jar文件使用MMAT
+### 2.2 通过jar文件使用MMAT
 
 
 将[mmat-1.0.jar](./dist/mmat-1.0.jar)下载到项目的根目录, 另外在项目的`根目录`下添加`mmat-config.json`配置 (如何配置请参考[mmat config配置](#mmat-config) ), 然后执行 mmat的可执行jar文件. 例如我的测试项目路径是 `/User/mrsimple/test-project/`, 添加 `mmat-config.json` 文件,并且进行相关的配置, 最后安装要测试的apk之后, 在项目跟目录下执行进入到如下命令:
@@ -124,6 +124,7 @@ public class MemoryLeakActivity extends AppCompatActivity {
 
 
 <span id='mmat-config'></span>
+
 ## 三、mmat-config.json 配置说明
 
 * `package`: 要测试的应用包名, 必填
@@ -188,7 +189,8 @@ public class MemoryLeakActivity extends AppCompatActivity {
 ```
 
 <span id="manifest"/>
-## 三、AndroidManifest.xml application 配置样例
+
+## 四、AndroidManifest.xml application 配置样例
 
 **注意, 只在【测试时】添加这些配置即可 (可以通过 flavor 对不同版本进行不同的配置).**
 
