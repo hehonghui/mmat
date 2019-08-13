@@ -62,7 +62,7 @@ apply plugin: 'com.mrcd.mmat.plugin'
 
 // configuration of mmat plugin 
 mmat {
-	// json config file
+    // json config file
     jsonConfigFile 'app/mmat-config.json'
     // disable Monkey runner
     disableMonkey false
