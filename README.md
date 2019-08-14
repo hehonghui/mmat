@@ -30,7 +30,7 @@ MMAT就是为了解决这个问题, 它的核心思路是用户在操作完app (
 
 **MMAT Demo演示请点击下面的视频:**    
 
-[![](https://img-blog.csdnimg.cn/20190814171112238.png)](https://www.bilibili.com/video/av63679239/ "")
+[<img src="https://img-blog.csdnimg.cn/20190814171112238.png" width="400">](https://www.bilibili.com/video/av63679239/ "")
 
 ## 二、使用MMAT
 
