@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+// apply mmat plugin
 apply plugin: 'com.mrcd.mmat.plugin'
 
 // 应用配置

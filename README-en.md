@@ -29,7 +29,7 @@ And voila, MMAT. Its main idea is to use adb shell command to go back to the mai
 
 > Note: MMAT will use adb command to dump memory snapshot when operating the App by Monkey runner, so if you need to dump the memory snapshot of release version, please make sure your App is debuggable when tested by MMAT. That means, you need to add 'android:debuggable="true"' to AndroidManifest.xml in the application tag. (**Risk alert: we suggest that you set debuggable=true during testing, but set it as false in release apk**).
 
-There are two ways of using MMAT, please refer to [section 1.1](#mmat-plugin) and [section 1.2](#mmat-jar) .
+There are two ways of using MMAT, please refer to [section 2.1](#mmat-plugin) and [section 2.2](#mmat-jar) .
 
 
 <span id='mmat-plugin'></span>

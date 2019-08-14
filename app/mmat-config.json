@@ -1,7 +1,7 @@
 {
 	"package": "com.example.mmat",
 	"main_activity": "com.example.mmat.MainActivity",
-	"monkey_command": "adb shell monkey -p com.example.mmat --ignore-crashes --ignore-timeouts --ignore-native-crashes --ignore-security-exceptions --pct-touch 40 --pct-motion 25 --pct-appswitch 10 --pct-rotation 5 -s 12358 -v -v -v --throttle 300 150",
+	"monkey_command": "adb shell monkey -p com.example.mmat --ignore-crashes --ignore-timeouts --ignore-native-crashes --ignore-security-exceptions --pct-touch 40 --pct-motion 25 --pct-appswitch 10 --pct-rotation 5 -s 12358 -v -v -v --throttle 300 100",
 	"enable_force_gc": true,
 	"hprof_dir": "/sdcard/",
 	"detect_leak_classes": [
