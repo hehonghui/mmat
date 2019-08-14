@@ -126,6 +126,12 @@ public class MemoryLeakActivity extends AppCompatActivity {
 
 其他的内存泄漏也是通过类似的方法根据报告进行分析即可.
 
+**其他重要配置**    
+
+如果你不想通过Monkey操作App, 也可以自己操作App进入、退出各个Activity, 然后将App退到后台, 再将 mmat 配置文件中的`monkey_command`置空, 然后再执行 `./gradlew startMmatRunner`, 此时就会直接dump app的内存快照, 然后进行后续的拉取内存快照以及分析内存的工作.
+
+而如果你已经有了一份App的内存快照hprof文件, 你可以在mmat配置中执行 hprof的路径 (即 `hprofFile` 参数),然后执行 `./gradlew startMmatRunner`任务, MMAT将直接分析这个 hprof文件, 最终分析出该内存快照中的内存泄漏.
+
 
 <span id='mmat-config'></span>
 
@@ -191,6 +197,8 @@ public class MemoryLeakActivity extends AppCompatActivity {
 	}
 }
 ```
+
+上述示例中Monkey的事件数量只有200次, 真实的测试场景可以设置为更高的事件数, 例如我们的Jenkins平台中Monkey测试事件数会设置为几万次. 具体事件数量开发者可以根据情况进行设定, 但不应该设置为太低的事件数, 否则内存泄漏可能不容易出现.
 
 <span id="manifest"/>
 
