@@ -55,7 +55,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.4.1'
 
         // add mmat plugin library
-        classpath 'org.mrcd:mmat-plugin:0.9.1'
+        classpath 'org.mrcd:mmat-plugin:0.9.2'
     }
 }
 ```
@@ -90,16 +90,34 @@ mmat {
 `java  -jar  mmat-1.0.jar /User/mrsimple/test-project/mmat-config.json`
 
 <span id='report'></span>
-执行完之后即可在 `/User/mrsimple/test-project/hprof-analysis/report` 下看到内存分析的报告. 如下图所示:    
+执行完之后即可在 `/User/mrsimple/test-project/hprof-analysis/report` 下看到内存分析的html报告. 如下图所示:    
 
-<img src="./doc/leak-report.png" width="720" />
+<img src="https://img-blog.csdnimg.cn/20190814195334682.png" width="720">
 
-图中列出了产生内存泄漏的Activity, 以及该Activity的实例地址、泄漏的内存大小以及GC ROOT, 因此通过这个报告就可以知道哪些页面产生了泄漏、泄漏的内存大小、以及应该从哪里解除引用, 达到处理掉这个内存泄漏的问题.
+报告中第一行为报告的标题，第二行给出了运行测试的手机型号、系统版本等信息。再往后就是内存泄漏的记录列表，例如第一条记录为: 
 
-例如上图中的第一条内存泄漏记录, 它的 GC ROOT 是`static com.example.mmat.MemoryLeakActivity.sActivityLeaked`,
-表示的是MemoryLeakActivity类中的静态字段 sActivityLeaked 引用了这个MemoryLeakActivity实例. 从后续的引用链信息看, 这个sActivityLeaked应该是一个LinkedList类型, MemoryLeakActivity是它的其中一个元素. 
+```java
+1. com.example.mmat.MemoryLeakActivity (0x12d552d0) instance (2.06 MB)
 
-我们再到MemoryLeakActivity中查看 sActivityLeaked 相关的代码, 如下所示:   
+* leaked ==> com.example.mmat.MemoryLeakActivity (0x12d552d0) instance (2.06 MB)
+  item -> java.util.LinkedList$Node
+    first -> java.util.LinkedList
+		sActivityLeaked -> static com.example.mmat.MemoryLeakActivity
+			[15] -> array java.lang.Object[]
+				runtimeInternalObjects -> dalvik.system.PathClassLoader
+					contextClassLoader -> thread java.lang.Thread (named 'null')
+```
+
+其中leaked ==> 后的MemoryLeakActivity就是泄漏的Activity,它的内存地址为0x12d552d0, 持有的内存大小为 2.06MB. 后续跟着的就是这个Activity实例的引用链, 通过分析这个引用链就能够找到造成内存泄漏的关键点。整个引用链的输出顺序是按照MAT的格式输出, 如果我们将本次得到的内存快照经过hprof-conv之后导入MAT (也就是Memory Analyzer Tool,我们常用来分析内存泄漏的工具, MMAT就是基于MAT命名的.), 找到地址为0x12d552d0的MemoryLeakActivity，得到的引用链如下图所示: 
+
+![](https://img-blog.csdnimg.cn/20190814201838841.jpg)
+
+可以看到，我们通过`MMAT`输出的引用链与通过MAT得到的基本一致。
+
+再回过头来分析上图中的第一条内存泄漏记录, 对于我们来说, 造成内存泄漏的关键点是`static com.example.mmat.MemoryLeakActivity.sActivityLeaked` (这个需要根据自己的代码以及报告中的信息具体分析),
+表示的是MemoryLeakActivity类中的静态字段 `sActivityLeaked` 引用了这个`MemoryLeakActivity`实例. 从后续的引用链信息看, 这个`sActivityLeaked`应该是一个LinkedList类型, `MemoryLeakActivity`是它的其中一个元素. 
+
+我们再到MemoryLeakActivity中查看 `sActivityLeaked` 相关的代码, 如下所示:     
 
 ```java
 /**

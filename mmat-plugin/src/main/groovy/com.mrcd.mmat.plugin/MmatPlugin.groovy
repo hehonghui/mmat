@@ -23,9 +23,17 @@ public class MmatPlugin implements Plugin<Project> {
             project.extensions.create('mmat', MmatExtension)
             mmatExt = project.mmat
 
-            // create mmatRunner task
+            // create mmatRunner task : startMmatRunner
             project.task("startMmatRunner", group: 'verification') {
                 doLast {
+                    startMmatRunner()
+                }
+            }
+
+            // create mmatRunner task : startMmatSilently
+            project.task("startMmatSilently", group: 'verification') {
+                doLast {
+                    mmatExt.disableMonkey = true
                     startMmatRunner()
                 }
             }

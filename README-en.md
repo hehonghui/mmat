@@ -49,7 +49,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.4.1'
 
         // add mmat plugin library
-        classpath 'org.mrcd:mmat-plugin:0.9.1'
+        classpath 'org.mrcd:mmat-plugin:0.9.2'
     }
 }
 ```
