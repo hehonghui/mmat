@@ -3,6 +3,8 @@
 [ ![Download](https://api.bintray.com/packages/bboyfeiyu/maven/mmat/images/download.svg?version=1.0) ](https://bintray.com/bboyfeiyu/maven/mmat/1.0/link)
 [![CircleCI](https://circleci.com/gh/hehonghui/mmat.svg?style=svg)](https://circleci.com/gh/hehonghui/mmat)
 
+<a href="https://tracking.gitads.io/?repo=mmat"> <img src="https://images.gitads.io/mmat" alt="GitAds"/> </a>
+
 When developing an Android App, we tend to use `LeakCanary` to detect memory leak, the basic principle of which is detecting if there is any memory leak regarding Activity and Fragment during App running. If there is indeed memory leak, then `LeakCanary` will proceed dump hprof and analyze the GC ROOT of the leaked object. And then notification will be delivered to user to inform them about the leak. It is a simple and efficient way to locate the memory leak during App development. 
 
 But `LeakCanary` dumps memory snapshot right after detecting leak during app running, and carrys out data analysis. And due to limited calculating capacity of mobile device, it is not able to detect all the existing leaks. For example, if `LeakCanary` is analyzing one leak and there is another one at the same time, and the user has logged out the app, then some part of the leaks may not be detected.  
