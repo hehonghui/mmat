@@ -3,7 +3,6 @@
 [ ![Download](https://api.bintray.com/packages/bboyfeiyu/maven/mmat/images/download.svg?version=1.0) ](https://bintray.com/bboyfeiyu/maven/mmat/1.0/link)
 [![CircleCI](https://circleci.com/gh/hehonghui/mmat.svg?style=svg)](https://circleci.com/gh/hehonghui/mmat)
 
-<a href="https://tracking.gitads.io/?repo=mmat"> <img src="https://images.gitads.io/mmat" alt="GitAds"/> </a>
 
 [English README](./README-en.md)
 ------
